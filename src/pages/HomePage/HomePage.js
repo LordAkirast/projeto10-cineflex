@@ -1,31 +1,36 @@
 import styled from "styled-components"
 
-export default function HomePage() {
+export default function HomePage({ moviesArray }) {
     return (
         <PageContainer>
             Selecione o filme
 
             <ListContainer>
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
-
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
-
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
-
-                <MovieContainer>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
+                {moviesArray.map((movie) => (
+                    <MovieContainer>
+                        <img src={movie.posterURL} alt="poster" />
+                        <movieTitle className="movieTitle">{movie.title}</movieTitle>
+                    </MovieContainer>
+                ))}
             </ListContainer>
 
         </PageContainer>
     )
 }
+
+
+
+const movieTitle = styled.div`
+position: absolute; 
+bottom: 0; left: 0; right: 0; 
+background-color: rgba(0, 0, 0, 0.5); 
+color: white; 
+padding: 10px; 
+font-size: 1.2rem; 
+opacity: 0; 
+transition: opacity 0.3s ease-in-out;;
+`
+
 
 const PageContainer = styled.div`
     display: flex;
@@ -54,6 +59,7 @@ const MovieContainer = styled.div`
     align-items: center;
     justify-content: center;
     margin: 10px;
+    &:hover ${movieTitle} { opacity: 1; };
     img {
         width: 130px;
         height: 190px;
