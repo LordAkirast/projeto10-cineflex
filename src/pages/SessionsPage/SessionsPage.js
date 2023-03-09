@@ -1,6 +1,31 @@
 import styled from "styled-components"
+import axios from 'axios'
+import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom'
+import { useEffect, useState } from "react"
+
+
 
 export default function SessionsPage() {
+
+    const [moviesSessions, setmoviesSessions] = useState([])
+    const {idFilme} = useParams()
+
+    useEffect(() => {
+        const url = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes`
+        const promise = axios.get(url)
+
+        promise.then((res) => {
+            console.log(res.data)
+            setmoviesSessions(res.data)
+
+        
+        })
+
+        promise.catch((err) => {
+            alert('Deu erro para pegar as sessões')
+            console.log("ERRO" + err.data)
+        })
+    },[])
 
     return (
         <PageContainer>

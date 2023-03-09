@@ -9,8 +9,6 @@ import { useEffect, useState } from "react"
 
 
 export default function App() {
-    const [movieId, setmovieId] = useState('')
-    const [movieImg, setmovieImg] = useState('')
     const [moviesArray, setmoviesArray] = useState([])
 
     useEffect(() => {
@@ -45,6 +43,10 @@ export default function App() {
         </>
     )
 }
+
+
+
+
 
 const NavContainer = styled.div`
     width: 100%;

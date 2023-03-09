@@ -1,6 +1,11 @@
 import styled from "styled-components"
+import {Link} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 
 export default function HomePage({ moviesArray }) {
+
+
+    
     return (
         <PageContainer>
             Selecione o filme
@@ -8,8 +13,10 @@ export default function HomePage({ moviesArray }) {
             <ListContainer>
                 {moviesArray.map((movie) => (
                     <MovieContainer>
-                        <img src={movie.posterURL} alt="poster" />
-                        <movieTitle className="movieTitle">{movie.title}</movieTitle>
+                        <Link to={`/sessoes/${movie.id}`}>
+                            <img src={movie.posterURL} alt="poster" />
+                            {movie.title}
+                        </Link>
                     </MovieContainer>
                 ))}
             </ListContainer>
@@ -18,18 +25,6 @@ export default function HomePage({ moviesArray }) {
     )
 }
 
-
-
-const movieTitle = styled.div`
-position: absolute; 
-bottom: 0; left: 0; right: 0; 
-background-color: rgba(0, 0, 0, 0.5); 
-color: white; 
-padding: 10px; 
-font-size: 1.2rem; 
-opacity: 0; 
-transition: opacity 0.3s ease-in-out;;
-`
 
 
 const PageContainer = styled.div`
@@ -59,7 +54,9 @@ const MovieContainer = styled.div`
     align-items: center;
     justify-content: center;
     margin: 10px;
-    &:hover ${movieTitle} { opacity: 1; };
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
     img {
         width: 130px;
         height: 190px;
