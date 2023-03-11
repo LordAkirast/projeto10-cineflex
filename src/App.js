@@ -35,9 +35,9 @@ export default function App() {
 
                 <Routes>
                     <Route path='/' element={<HomePage moviesArray={moviesArray}/>}/>
-                    <Route path='/sessoes/:idFilme' element={<SessionsPage />}/>
-                    <Route path='/assentos/:idSessao' element={<SeatsPage />}/>
-                    <Route path='/sucesso' element={<SuccessPage />}/>
+                    <Route path='/sessoes/:idFilme' element={<SessionsPage moviesArray={moviesArray}/>}/>
+                    <Route path='/assentos/:idSessao' element={<SeatsPage moviesArray={moviesArray}/>}/>
+                    <Route path='/sucesso' element={<SuccessPage moviesArray={moviesArray}/>}/>
                 </Routes>
             </BrowserRouter>
         </>

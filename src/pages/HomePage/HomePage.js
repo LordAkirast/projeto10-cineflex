@@ -12,7 +12,7 @@ export default function HomePage({ moviesArray }) {
 
             <ListContainer>
                 {moviesArray.map((movie) => (
-                    <MovieContainer>
+                    <MovieContainer key={movie.id}>
                         <Link to={`/sessoes/${movie.id}`}>
                             <img src={movie.posterURL} alt="poster" />
                             {movie.title}
@@ -57,6 +57,10 @@ const MovieContainer = styled.div`
     display: flex;
     flex-direction: column;
     font-size: 12px;
+    a {
+    text-decoration: none;
+    color: inherit;
+  }
     img {
         width: 130px;
         height: 190px;
