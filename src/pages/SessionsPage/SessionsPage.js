@@ -18,6 +18,7 @@ export default function SessionsPage() {
         promise.then((res) => {
             setmoviesSessions(res.data.days)
             setselectedMovie(res.data)
+            // console.log(res.data.days)
         })
 
         promise.catch((err) => {
@@ -32,13 +33,13 @@ export default function SessionsPage() {
             <div>
 
                 {moviesSessions.map((movie) => (
-                    <SessionContainer>
+                    <SessionContainer key={movie.idSessao}>
                         {movie.date} - {movie.weekday}
                         <ButtonsContainer>
-                            <Link to={`/assentos/:${movie.idSessao}`}>
+                            <Link to={`/assentos/${movie.showtimes[0].id}`}>
                                 <button>{movie.showtimes[0].name}</button>
                             </Link>
-                            <Link to={`/assentos/:${movie.idSessao}`}>
+                            <Link to={`/assentos/${movie.showtimes[1].id}`}>
                                 <button>{movie.showtimes[1].name}</button>
                             </Link>
                         </ButtonsContainer>

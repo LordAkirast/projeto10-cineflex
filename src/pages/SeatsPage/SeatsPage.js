@@ -1,22 +1,53 @@
 import styled from "styled-components"
+import axios from 'axios'
+import { BrowserRouter, Routes, Route, useParams, Link } from 'react-router-dom'
+import { useEffect, useState } from "react"
 
 export default function SeatsPage() {
+
+    const [selectedSeat, setselectedSeat] = useState([])
+    const [available, setavailable ] = useState(true)
+    const [movieName, setmovieName] = useState('')
+    const [movieDate, setmovieDate] = useState('')
+    const [movieURL, setmovieURL] = useState('')
+
+    const { idSessao } = useParams()
+
+
+    useEffect(() => {
+        const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
+        const promise = axios.get(url)
+
+        promise.then((res) => {
+            setselectedSeat(res.data.seats)
+            setmovieName(res.data.movie.title)
+            setmovieDate(res.data.day.weekday + ' - ' + res.data.name)
+            setmovieURL(res.data.movie.posterURL)
+            console.log(res.data)
+        })
+
+        promise.catch((err) => {
+            alert('Deu erro para pegar as sessões')
+            console.log("ERRO" + err.data)
+        })
+    }, [])
 
     return (
         <PageContainer>
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
+
+            {selectedSeat.map((seats) => (
+                seats.isAvailable === true ? <SeatItem style={{ border: `1px solid ${available === true ? 'blue' : '#0E7D71'}` }} onClick={() => setavailable(available === true ? false : true)} key={seats.id}>{seats.name}</SeatItem> : <SeatItemNot onClick={() => alert('Assento Indisponível')} key={seats.id}>{seats.name}</SeatItemNot>
+
+                ))}
+                
             </SeatsContainer>
 
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircledis />
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
@@ -24,7 +55,7 @@ export default function SeatsPage() {
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCirclein />
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
@@ -41,11 +72,11 @@ export default function SeatsPage() {
 
             <FooterContainer>
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    <img src={movieURL} alt="poster" />
                 </div>
                 <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
+                    <p>{movieDate}</p>
+                    <p>{movieName}</p>
                 </div>
             </FooterContainer>
 
@@ -106,6 +137,30 @@ const CaptionCircle = styled.div`
     justify-content: center;
     margin: 5px 3px;
 `
+
+const CaptionCirclein = styled.div`
+    border: 1px solid #F7C52B;         // Essa cor deve mudar
+    background-color: #FBE192;    // Essa cor deve mudar
+    height: 25px;
+    width: 25px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 3px;
+`
+
+const CaptionCircledis = styled.div`
+    border: 1px solid #0E7D71;         // Essa cor deve mudar
+    background-color: #1AAE9E;    // Essa cor deve mudar
+    height: 25px;
+    width: 25px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 3px;
+`
 const CaptionItem = styled.div`
     display: flex;
     flex-direction: column;
@@ -113,7 +168,7 @@ const CaptionItem = styled.div`
     font-size: 12px;
 `
 const SeatItem = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
+    border: 1px solid ${(props) => (props.available === true ? 'blue' : '#0E7D71')};         // Essa cor deve mudar
     background-color: lightblue;    // Essa cor deve mudar
     height: 25px;
     width: 25px;
@@ -124,7 +179,39 @@ const SeatItem = styled.div`
     align-items: center;
     justify-content: center;
     margin: 5px 3px;
+    
 `
+
+
+const SeatItemSel = styled.div`
+    border: 1px solid #0E7D71;         // Essa cor deve mudar
+    background-color: #1AAE9E;    // Essa cor deve mudar
+    height: 25px;
+    width: 25px;
+    border-radius: 25px;
+    font-family: 'Roboto';
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 3px;
+    
+`
+const SeatItemNot = styled.div`
+    border: 1px solid #F7C52B;         // Essa cor deve mudar
+    background-color: #FBE192;    // Essa cor deve mudar
+    height: 25px;
+    width: 25px;
+    border-radius: 25px;
+    font-family: 'Roboto';
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 3px;
+`
+
+
 const FooterContainer = styled.div`
     width: 100%;
     height: 120px;

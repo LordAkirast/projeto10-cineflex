@@ -16,7 +16,7 @@ export default function App() {
         const promise = axios.get(url)
 
         promise.then((res) => {
-            console.log(res.data)
+            // console.log(res.data)
             setmoviesArray(res.data)
 
         
