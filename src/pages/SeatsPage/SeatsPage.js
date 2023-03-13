@@ -1,15 +1,23 @@
 import styled from "styled-components"
 import axios from 'axios'
-import { BrowserRouter, Routes, Route, useParams, Link } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useParams, Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from "react"
+import SuccessPage from "../SuccessPage/SuccessPage"
 
-export default function SeatsPage() {
+export default function SeatsPage({ setmovieAndSession, date, finalSeats, buyerName, buyerCpf }) {
 
     const [selectedSeat, setselectedSeat] = useState([])
-    const [available, setavailable ] = useState(true)
+    const [selectArray, setselectArray] = useState([])
     const [movieName, setmovieName] = useState('')
     const [movieDate, setmovieDate] = useState('')
     const [movieURL, setmovieURL] = useState('')
+    const [name, setname] = useState('')
+    const [cpf, setcpf] = useState('')
+    const [count, setcount] = useState(0)
+    const navigate = useNavigate()
+    const [seatNumber, setseatNumber] = useState([])
+    const [color, setcolor] = useState('#1AAE9E')
+    const [text, settext] = useState('Selecione o(s) assento(s)')
 
     const { idSessao } = useParams()
 
@@ -23,66 +31,117 @@ export default function SeatsPage() {
             setmovieName(res.data.movie.title)
             setmovieDate(res.data.day.weekday + ' - ' + res.data.name)
             setmovieURL(res.data.movie.posterURL)
-            console.log(res.data)
         })
 
         promise.catch((err) => {
             alert('Deu erro para pegar as sessões')
             console.log("ERRO" + err.data)
         })
-    }, [])
+    }, [selectArray])
+
+
+    function Next() {
+        const url = 'https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many';
+
+        axios.post(url,
+            {
+                ids: selectArray,
+                name: name,
+                cpf: cpf
+            }
+        )
+            .then((response) => {
+                console.log(response);
+                setcount(1)
+                window.history.pushState({}, "", "http://localhost:3000/sucesso");
+
+
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+    
+
 
     return (
-        <PageContainer>
-            Selecione o(s) assento(s)
+        count === 0 ?
+            <PageContainer>
+                {text}
 
-            <SeatsContainer>
+                <SeatsContainer>
 
-            {selectedSeat.map((seats) => (
-                seats.isAvailable === true ? <SeatItem style={{ border: `1px solid ${available === true ? 'blue' : '#0E7D71'}` }} onClick={() => setavailable(available === true ? false : true)} key={seats.id}>{seats.name}</SeatItem> : <SeatItemNot onClick={() => alert('Assento Indisponível')} key={seats.id}>{seats.name}</SeatItemNot>
+                    {selectedSeat.map((seats) => (
+                        seats.isAvailable === true ? <SeatItem key={seats.id} style={{
+                            backgroundColor: selectArray.includes(seats.id) === true ? color : 'lightblue'
+                          }}  onClick={() => {
+                            if (selectArray.includes(seats.id)) {
+                                alert('Assento já selecionado!');
+                            } else {
+                                setselectArray([...selectArray, seats.id]);
+                                setseatNumber([...seatNumber, seats.name]);
+                                settext('Clique no ícone de "Selecionados" para reinicializar a escolha de assentos')
+                            }
+                        }}
+                            key={seats.id}>{seats.name}</SeatItem> : <SeatItemNot onClick={() => alert('Assento Indisponível')} key={seats.id}>{seats.name}</SeatItemNot>
 
-                ))}
-                
-            </SeatsContainer>
+                    ))}
 
-            <CaptionContainer>
-                <CaptionItem>
-                    <CaptionCircledis />
-                    Selecionado
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Disponível
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCirclein />
-                    Indisponível
-                </CaptionItem>
-            </CaptionContainer>
+                </SeatsContainer>
 
-            <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+                <CaptionContainer>
+                    <CaptionItem>
+                        <CaptionCircledis onClick={resetSeats} />
+                        Selecionados:
+                    </CaptionItem>
+                    <CaptionItem>
+                        <CaptionCircle />
+                        Disponível
+                    </CaptionItem>
+                    <CaptionItem>
+                        <CaptionCirclein />
+                        Indisponível
+                    </CaptionItem>
+                </CaptionContainer>
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                <FormContainer>
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
+                        Next();
+                    }}>
+                        Nome do Comprador:
+                        <input value={name} onChange={e => setname(e.target.value)} placeholder="Digite seu nome..." />
 
-                <button>Reservar Assento(s)</button>
-            </FormContainer>
+                        CPF do Comprador:
+                        <input value={cpf} onChange={e => setcpf(e.target.value)} placeholder="Digite seu CPF..." />
 
-            <FooterContainer>
-                <div>
-                    <img src={movieURL} alt="poster" />
-                </div>
-                <div>
-                    <p>{movieDate}</p>
-                    <p>{movieName}</p>
-                </div>
-            </FooterContainer>
+                        <button type="submit">Reservar Assento(s)</button>
+                    </form>
+                </FormContainer>
 
-        </PageContainer>
+                <FooterContainer>
+                    <div>
+                        <img src={movieURL} alt="poster" />
+                    </div>
+                    <div>
+                        <p>{movieDate}</p>
+                        <p>{movieName}</p>
+                    </div>
+                </FooterContainer>
+
+            </PageContainer> : <SuccessPage seatNumber={seatNumber} name={name} cpf={cpf} movieName={movieName} movieDate={movieDate} movieURL={movieURL} />
     )
+
+    function resetSeats() {
+        setselectArray([])
+        setseatNumber([])
+        settext('Selecione o(s) assento(s)')
+    }
 }
+
+
+
 
 const PageContainer = styled.div`
     display: flex;
@@ -151,8 +210,8 @@ const CaptionCirclein = styled.div`
 `
 
 const CaptionCircledis = styled.div`
-    border: 1px solid #0E7D71;         // Essa cor deve mudar
-    background-color: #1AAE9E;    // Essa cor deve mudar
+    border: 1px solid #0E7D71;
+    background-color: #1AAE9E;
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -160,7 +219,13 @@ const CaptionCircledis = styled.div`
     align-items: center;
     justify-content: center;
     margin: 5px 3px;
-`
+
+    &:hover {
+        background-color: #f44336;
+        cursor: pointer;
+    }
+`;
+
 const CaptionItem = styled.div`
     display: flex;
     flex-direction: column;

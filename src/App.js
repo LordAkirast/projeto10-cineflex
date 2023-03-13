@@ -10,6 +10,11 @@ import { useEffect, useState } from "react"
 
 export default function App() {
     const [moviesArray, setmoviesArray] = useState([])
+    const [movieAndSession, setmovieAndSession] = useState('')
+    const [date, setdate] = useState('')
+    const [finalSeats, setfinalSeats] = useState('')
+    const [buyerName, setbuyerName] = useState('')
+    const [buyerCpf, setbuyerCpf] = useState('')
 
     useEffect(() => {
         const url = 'https://mock-api.driven.com.br/api/v8/cineflex/movies'
@@ -35,9 +40,9 @@ export default function App() {
 
                 <Routes>
                     <Route path='/' element={<HomePage moviesArray={moviesArray}/>}/>
-                    <Route path='/sessoes/:idFilme' element={<SessionsPage moviesArray={moviesArray}/>}/>
-                    <Route path='/assentos/:idSessao' element={<SeatsPage moviesArray={moviesArray}/>}/>
-                    <Route path='/sucesso' element={<SuccessPage moviesArray={moviesArray}/>}/>
+                    <Route path='/sessoes/:idFilme' element={<SessionsPage moviesArray={moviesArray} />}/>
+                    <Route path='/assentos/:idSessao' element={<SeatsPage moviesArray={moviesArray} buyerCpf={buyerCpf} buyerName={buyerName} finalSeats={finalSeats} date={date} movieAndSession={setmovieAndSession}/>}/>
+                    {/* <Route path='/sucesso' element={<SuccessPage buyerCpf={buyerCpf} buyerName={buyerName} finalSeats={finalSeats} moviesArray={moviesArray} date={date} movieAndSession={movieAndSession}/>}/> */}
                 </Routes>
             </BrowserRouter>
         </>
