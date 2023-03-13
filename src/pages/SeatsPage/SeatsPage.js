@@ -73,7 +73,7 @@ export default function SeatsPage({ setmovieAndSession, date, finalSeats, buyerN
                 <SeatsContainer>
 
                     {selectedSeat.map((seats) => (
-                        seats.isAvailable === true ? <SeatItem key={seats.id} style={{
+                        seats.isAvailable === true ? < SeatItem data-test="seat" key={seats.id} style={{
                             backgroundColor: selectArray.includes(seats.id) === true ? color : 'lightblue'
                           }}  onClick={() => {
                             if (selectArray.includes(seats.id)) {
@@ -84,7 +84,7 @@ export default function SeatsPage({ setmovieAndSession, date, finalSeats, buyerN
                                 settext('Clique no ícone de "Selecionados" para reinicializar a escolha de assentos')
                             }
                         }}
-                            key={seats.id}>{seats.name}</SeatItem> : <SeatItemNot onClick={() => alert('Assento Indisponível')} key={seats.id}>{seats.name}</SeatItemNot>
+                            >{seats.name}</SeatItem> : <SeatItemNot data-test="seat" onClick={() => alert('Assento Indisponível')} key={seats.id}>{seats.name}</SeatItemNot>
 
                     ))}
 
@@ -111,16 +111,16 @@ export default function SeatsPage({ setmovieAndSession, date, finalSeats, buyerN
                         Next();
                     }}>
                         Nome do Comprador:
-                        <input value={name} onChange={e => setname(e.target.value)} placeholder="Digite seu nome..." />
+                        <input data-test="client-name" value={name} onChange={e => setname(e.target.value)} placeholder="Digite seu nome..." />
 
                         CPF do Comprador:
-                        <input value={cpf} onChange={e => setcpf(e.target.value)} placeholder="Digite seu CPF..." />
+                        <input data-test="client-cpf" value={cpf} onChange={e => setcpf(e.target.value)} placeholder="Digite seu CPF..." />
 
-                        <button type="submit">Reservar Assento(s)</button>
+                        <button data-test="book-seat-btn" type="submit">Reservar Assento(s)</button>
                     </form>
                 </FormContainer>
 
-                <FooterContainer>
+                <FooterContainer data-test="footer">
                     <div>
                         <img src={movieURL} alt="poster" />
                     </div>

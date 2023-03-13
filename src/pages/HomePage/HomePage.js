@@ -12,7 +12,7 @@ export default function HomePage({ moviesArray }) {
 
             <ListContainer>
                 {moviesArray.map((movie) => (
-                    <MovieContainer key={movie.id}>
+                    <MovieContainer key={movie.id} data-test="movie">
                         <Link to={`/sessoes/${movie.id}`}>
                             <img src={movie.posterURL} alt="poster" />
                             {movie.title}
